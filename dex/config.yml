@@ -1,0 +1,37 @@
+issuer: http://localhost:5556/dex
+
+storage:
+  type: sqlite3
+  config:
+    file: /var/dex/dex.db
+
+web:
+  http: 0.0.0.0:5556
+
+expiry:
+  signingKeys: 6h
+  idTokens: 24h
+  authRequests: 24h
+
+oauth2:
+  responseTypes: [code]
+  skipApprovalScreen: false
+  alwaysShowLoginScreen: true
+
+enablePasswordDB: true
+
+staticClients:
+  - id: example-app # Client ID
+    secret: example-app-secret # Client Secret
+    name: 'Example App'
+    redirectURIs:
+      - http://localhost:9999 # Auth Gateway
+
+connectors:
+  - type: github
+    id: github
+    name: GitHub
+    config:
+      clientID: {{ getenv "GITHUB_CLIENT_ID" "" }}
+      clientSecret: {{ getenv "GITHUB_CLIENT_SECRET" "" }}
+      redirectURI: http://localhost:5556/dex/callback

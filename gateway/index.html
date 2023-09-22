@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Redirecting...</title>
+  </head>
+  <body>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      font: 16px monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      background: #111827;
+      color: #94a3b8;
+    }
+  </style>
+  <div id="response"></div>
+  <script>
+    // Configure
+    const whitelist = /$WHITELIST_REGEX/;
+    const property = 'state';
+
+    // Set up
+    function message(text) {
+      document.getElementById('response').innerText = text;
+    }
+
+    // Read query params
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const baseNextUrl = urlSearchParams.get(property);
+    urlSearchParams.delete(property);
+    const addonQuery = urlSearchParams.toString();
+
+    // Build final URL
+    const nextUrl = baseNextUrl + (baseNextUrl.includes('?') ? '&' : '?') + addonQuery;
+
+    // Act
+    if (whitelist.test(baseNextUrl)) {
+      message('Redirecting...');
+      window.location.href = nextUrl;
+    } else {
+      message('The URL is not whitelisted.');
+    }
+  </script>
+  </body>
+</html>
